@@ -16,5 +16,5 @@ set up ur virtual env and install dependencies
 
 [Gemini ](!https://ai.google.dev/tutorials/python_quickstart)
 
-[Selenium] (!https://www.selenium.dev/documentation/)
+[Selenium](!https://www.selenium.dev/documentation/)
 
