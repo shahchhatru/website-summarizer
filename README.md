@@ -4,7 +4,7 @@
 git clone https://github.com/shahchhatru/website-summarizer.git
 ```
 
-remove Pipfhttps://ai.google.dev/tutorials/python_quickstartiles
+remove Pipfiles like Pipfile , Pipfile.lock
 
 ```
 rm -rf Pipfile Pipfile.lock
