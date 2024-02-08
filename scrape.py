@@ -54,6 +54,12 @@ all_elements = driver.find_elements(By.XPATH, "//*")
 for element in all_elements:
     try:
         print(element.text)
+        chat = WebChat(summarize_response(element.text))
+        #query=" Your question you will ask to model"
+        #chat.reply(query)
+
+
+        
 
     except UnicodeEncodeError:
         # If an error occurs, try to encode the text using UTF-8
