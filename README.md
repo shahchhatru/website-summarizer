@@ -12,6 +12,9 @@ rm -rf Pipfile Pipfile.lock
 
 set up ur virtual env and install dependencies
 
+```
+pip install -r requirements.txt
+```
 ## libary used 
 
 [Gemini ](!https://ai.google.dev/tutorials/python_quickstart)
