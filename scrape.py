@@ -16,10 +16,25 @@ genai.configure(api_key=GOOGLE_API_KEY)
 
 model = genai.GenerativeModel('models/gemini-pro')
 
+## summarization code 
+
 def summarize_response(web_text):
     prompt = f"Summarize Given text: {web_text} in about 100 words"
     response = model.generate_content(prompt)
     return response.candidates[0].content.parts[0].text
+
+
+##  chat code
+
+class WebChat():
+    def __init__(self,summary_text):
+        self.chat = model.start_chat(history=[summary_text])
+    
+    def reply(self,query):
+        response = chat.send_message(query)
+        #response.candidates[0].content.parts[0].text
+        return response
+
 
 
 
