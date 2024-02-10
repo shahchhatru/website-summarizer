@@ -15,9 +15,14 @@ set up ur virtual env and install dependencies
 ```
 pip install -r requirements.txt
 ```
-## libary used 
+
+## Libaries used 
 
 [Gemini ](!https://ai.google.dev/tutorials/python_quickstart)
 
 [Selenium](!https://www.selenium.dev/documentation/)
 
+[Gradio](!https://www.gradio.app)
+
+
+![webpage summerizer](2.png)

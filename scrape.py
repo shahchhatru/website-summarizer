@@ -1,69 +1,48 @@
+import gradio as gr
+import google.generativeai as genai
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-import google.generativeai as genai
-
-
-# Define the URL of the website you want to scrape
-
-url = "https://kathmandupost.com/national/2024/02/06/nepal-proposes-tariff-for-electricity-export-to-bangladesh"
-
-GOOGLE_API_KEY="AIzaSyDupxjjNLXwy9bHrzhzGN28ujpWAQ1Z76k"
-
+# Configure Google API key and model
+GOOGLE_API_KEY = "AIzaSyDupxjjNLXwy9bHrzhzGN28ujpWAQ1Z76k"
 genai.configure(api_key=GOOGLE_API_KEY)
-
 model = genai.GenerativeModel('models/gemini-pro')
 
-## summarization code 
-
-def summarize_response(web_text):
-    prompt = f"Summarize Given text: {web_text} in about 100 words"
+def summarize_webpage(message, history):
+    url = message  # Assuming the user enters a URL directly
+    # Initialize the Chrome webdriver
+    driver = webdriver.Chrome()
+    # Open the URL in the webdriver
+    driver.get(url)
+    # Wait for the page to load completely
+    wait = WebDriverWait(driver, 10)
+    wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
+    # Extract all the information from the website
+    all_text = driver.find_element(By.TAG_NAME, "body").text
+    # Close the webdriver
+    driver.quit()
+    # Summarize the text
+    prompt = f"Summarize Given text: {all_text} in about 200 words"
     response = model.generate_content(prompt)
-    return response.candidates[0].content.parts[0].text
+    summarized_text = response.candidates[0].content.parts[0].text
+    return summarized_text
 
+# Custom theme with monospace font
+custom_theme = gr.themes.Default(font=["Courier New", "Arial", "sans-serif"])
 
-##  chat code
+# Create a Gradio interface with a chat-like appearance and custom theme
+chat_interface = gr.ChatInterface(
+    summarize_webpage,
+    chatbot=gr.Chatbot(height=400),
+    textbox=gr.Textbox(placeholder="Enter the URL of the webpage", container=False, scale=5),
+    title="Webpage Summarizer",
+    theme=custom_theme,
+    retry_btn=None,
+    undo_btn="Delete Previous",
+    clear_btn="Clear",
+)
 
-class WebChat():
-    def __init__(self,summary_text):
-        self.chat = model.start_chat(history=[summary_text])
-    
-    def reply(self,query):
-        response = chat.send_message(query)
-        #response.candidates[0].content.parts[0].text
-        return response
-
-
-
-
-# Initialize the Chrome webdriver
-driver = webdriver.Chrome()
-
-# Open the URL in the webdriver
-driver.get(url)
-
-# Wait for the page to load completely
-wait = WebDriverWait(driver, 10)
-wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
-
-# Extract all the information from the website
-all_elements = driver.find_elements(By.XPATH, "//*")
-
-for element in all_elements:
-    try:
-        print(element.text)
-        chat = WebChat(summarize_response(element.text))
-        #query=" Your question you will ask to model"
-        #chat.reply(query)
-
-
-        
-
-    except UnicodeEncodeError:
-        # If an error occurs, try to encode the text using UTF-8
-        print(element.text.encode('utf-8'))
-
-# Close the webdriver
-driver.quit()
+# Launch the Gradio interface
+chat_interface.launch()
